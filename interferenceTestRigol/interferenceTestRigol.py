@@ -9,15 +9,18 @@ import numpy as np
 import matplotlib.pyplot as plt
 from datetime import datetime
 import time
+import pyvisa as visa
 
 plt.close('all')
 
-
+ADDRESS = 'TCPIP0::169.254.132.248::INSTR'
 startFreq = 50 * 10**6 #Hz
 stopFreq = 1000 * 10**6 #Hz
 nPoints = 10000 
 freqArr = np.linspace(startFreq, stopFreq, nPoints)
 
+RM = visa.ResourceManager()
+INST = RM.open_resource(ADDRESS)
 INST.write(':TRAC:AVER:COUN 30')
 
 

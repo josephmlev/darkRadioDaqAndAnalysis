@@ -12,7 +12,6 @@ import os
 import configparser
 import subprocess
 import pyvisa as visa
-import serial as pyser
 import sys, smtplib
 from stat import S_IREAD, S_IWUSR
 from email.mime.text import MIMEText
