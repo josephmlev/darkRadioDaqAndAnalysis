@@ -37,8 +37,8 @@ df_52cmDip_60N_60W_57V['F. Gen Output (dBm)'] = fGenCalInterp(freqArr)
 df_52cmDip_60N_60W_57V['Reflection Coefficient'] = (df_52cmDip_60N_60W_57V['VSWR'] - 1) /(df_52cmDip_60N_60W_57V['VSWR'] + 1)
 df_52cmDip_60N_60W_57V['Return Loss (dB)'] = -10 * np.log10(df_52cmDip_60N_60W_57V['Reflection Coefficient'])
 df_52cmDip_60N_60W_57V['Power to Antenna'] = df_52cmDip_60N_60W_57V['F. Gen Output (dBm)'] - df_52cmDip_60N_60W_57V['Return Loss (dB)']
-df_52cmDip_60N_60W_57V['Normilized Dipole Power (dBm)'] = df_52cmDip_60N_60W_57V['Dipole 52 CM Power (dBm)'] -2 df_52cmDip_60N_60W_57V['Power to Antenna']
+df_52cmDip_60N_60W_57V['Normilized Dipole Power (dBm)'] = df_52cmDip_60N_60W_57V['Dipole 52 CM Power (dBm)'] - df_52cmDip_60N_60W_57V['Power to Antenna']
 
-
+df_52cmDip_60N_60W_57V.plot('Frequency (MHz)', 'Normilized Dipole Power (dBm)')
 
 
