@@ -25,36 +25,35 @@ def interpTxt(txtPath, freqArr):
     return interpVswrArr(freqArr)
 
 
-def processPowerDf(freqArr, interpPowerArr, interpFGenCalArr, interpVswrArr):
+def processPowerDf(freqArr, interpPowerArr, interpFGenCalArr, interpRLArr):
     dfName = pd.DataFrame()
 
     dfName['Frequency (MHz)'] = freqArr
     dfName['Raw Antenna Power (dBm)'] = interpPowerArr
-    dfName['VSWR'] = interpVswrArr
+    dfName['Return Loss'] = interpRLArr
     dfName['F. Gen Output (dBm)'] = interpFGenCalArr
-    dfName['Reflection Coefficient'] = (dfName['VSWR'] - 1) /(dfName['VSWR'] + 1)
-    dfName['Matching Loss'] = -10 * np.log10(1 - dfName['Reflection Coefficient']**2)
+    dfName['Matching Loss'] = -10 * np.log10(1 - 10**(-dfName['Return Loss']/10)) 
     dfName['Power to Antenna'] = dfName['F. Gen Output (dBm)'] - dfName['Matching Loss']
     dfName['Normilized Antenna Power (dBm)'] = dfName['Raw Antenna Power (dBm)'] - dfName['Power to Antenna']
     return dfName
 
 freqArr = np.arange(50,300,0.1)
-
+    
 
 dip52cm_60_60_57_PowerArr = interpDf('./52cmDip_pwr_n34dBm_60N_60W_57V.pkl', freqArr)
 dip52cm_60_60_57_fGenCalArr = interpDf('./fGenCalHiRes.pkl', freqArr)
-dip52cm_60_60_57_VswrArr = interpTxt('52cmDip_vswr_60N_60W_57V.txt', freqArr)
+dip52cm_60_60_57_RLArr = interpTxt('52cmDip_RL_60N_60W_57V.txt', freqArr)
 
-dip52cm_60_60_57_powerDf = processPowerDf(freqArr, dip52cm_60_60_57_PowerArr, dip52cm_60_60_57_fGenCalArr, dip52cm_60_60_57_VswrArr)
+dip52cm_60_60_57_powerDf = processPowerDf(freqArr, dip52cm_60_60_57_PowerArr, dip52cm_60_60_57_fGenCalArr, dip52cm_60_60_57_RLArr)
 
 
 
 
 dip30cm_60_60_57_PowerArr = interpDf('./30cmDip_pwr_n20dbm_60N_60W_57V.pkl', freqArr)
 dip30cm_60_60_57_fGenCalArr = interpDf('./fGenCal_30cmDip_n20dbm_60N_60W_57V.pkl', freqArr)
-dip30cm_60_60_57_VswrArr = interpTxt('30cmDip_vswr_60N_60W_57V.txt', freqArr)
+dip30cm_60_60_57_RLArr = interpTxt('30cmDip_RL_60N_60W_57V.txt', freqArr)
 
-dip30cm_60_60_57_powerDf = processPowerDf(freqArr, dip30cm_60_60_57_PowerArr, dip30cm_60_60_57_fGenCalArr, dip30cm_60_60_57_VswrArr)
+dip30cm_60_60_57_powerDf = processPowerDf(freqArr, dip30cm_60_60_57_PowerArr, dip30cm_60_60_57_fGenCalArr, dip30cm_60_60_57_RLArr)
 
 
 
@@ -70,7 +69,7 @@ plt.close('all')
 plt.figure()
 plt.title('Normilized Antenna Output Power')
 plt.plot(freqArr, dip30cm_60_60_57_powerDf['Normilized Antenna Power (dBm)'], label = '30cm dip')
-#plt.plot(freqArr, dip52cm_60_60_57_powerDf['Normilized Antenna Power (dBm)'], label = '52cm dip')
+plt.plot(freqArr, dip52cm_60_60_57_powerDf['Normilized Antenna Power (dBm)'], label = '52cm dip')
 plt.legend()
 plt.xlabel('Freq (MHz)')
 plt.ylabel('Power (dBm)')
@@ -83,21 +82,23 @@ plt.legend()
 plt.xlabel('Freq (MHz)')
 plt.ylabel('Power (dBm)')
 
-plt.figure()
-plt.title('Reflection Coefficient')
-plt.plot(freqArr, dip30cm_60_60_57_powerDf['Reflection Coefficient'], label = '30cm dip')
-plt.plot(freqArr, dip52cm_60_60_57_powerDf['Reflection Coefficient'], label = '52cm dip')
-plt.legend()
-plt.xlabel('Freq (MHz)')
-plt.ylabel('Power (dBm)')
 
 plt.figure()
-plt.title('VSWR')
-plt.plot(freqArr, dip30cm_60_60_57_powerDf['VSWR'], label = '30cm dip')
-plt.plot(freqArr, dip52cm_60_60_57_powerDf['VSWR'], label = '52cm dip')
+plt.title('Return Loss')
+plt.plot(freqArr, dip30cm_60_60_57_powerDf['Return Loss'], label = '30cm dip')
+plt.plot(freqArr, dip52cm_60_60_57_powerDf['Return Loss'], label = '52cm dip')
 plt.legend()
 plt.xlabel('Freq (MHz)')
-plt.ylabel('Power (dBm)')
+plt.ylabel('dB')
+
+
+plt.figure()
+plt.title('Matching Loss')
+plt.plot(freqArr, dip30cm_60_60_57_powerDf['Matching Loss'], label = '30cm dip')
+plt.plot(freqArr, dip52cm_60_60_57_powerDf['Matching Loss'], label = '52cm dip')
+plt.legend()
+plt.xlabel('Freq (MHz)')
+plt.ylabel('dB')
 
 '''
 dip52CmFreq = pd.read_pickle('./52cmDip_pwr_n34dBm_60N_60W_57V.pkl').index.values
