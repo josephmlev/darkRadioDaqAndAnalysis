@@ -24,6 +24,12 @@ def interpTxt(txtPath, freqArr):
     interpVswrArr = interp1d(vswrfreq,vswr)
     return interpVswrArr(freqArr)
 
+def interpComsolTxt(txtPath, freqArr):
+    freq = np.loadtxt(txtPath, skiprows = 5, usecols = 0)
+    value = np.loadtxt(txtPath, skiprows = 5, usecols = 1)
+    interpArr = interp1d(freq,value)
+    return interpArr(freqArr)
+
 
 def processPowerDf(freqArr, interpPowerArr, interpFGenCalArr, interpVswrArr):
     dfName = pd.DataFrame()
@@ -95,6 +101,15 @@ plt.figure()
 plt.title('VSWR')
 plt.plot(freqArr, dip30cm_60_60_57_powerDf['VSWR'], label = '30cm dip')
 plt.plot(freqArr, dip52cm_60_60_57_powerDf['VSWR'], label = '52cm dip')
+plt.legend()
+plt.xlabel('Freq (MHz)')
+plt.ylabel('Power (dBm)')
+
+
+plt.figure()
+plt.title('Normilized Antenna Output Power vs COMSOL')
+plt.plot(freqArr, dip30cm_60_60_57_powerDf['Normilized Antenna Power (dBm)'], label = '30cm dip')
+plt.plot(freqArr, interpComsolTxt('30cmDip_60_60_57_simulation_powerDbm_12.25.21.txt', freqArr), label = 'COMSOL')
 plt.legend()
 plt.xlabel('Freq (MHz)')
 plt.ylabel('Power (dBm)')
