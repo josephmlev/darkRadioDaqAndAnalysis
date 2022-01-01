@@ -31,10 +31,14 @@ df_30cmDipBananna_noChokes_60N60E57V_20dBatt_rbw10k_DANLn100pm3dB_avg4 = pd.read
 
 df_30cmDipBananna_noChokes_60N60E57V_20dBattAtFeed_rbw10k_DANLn100pm3dB_avg4 = pd.read_pickle('30cmDipBananna_noChokes_60N60E57V_20dBattAtFeed_rbw10k_DANLn100pm3dB_avg4.pkl')
 
+df_30cmDipBananna_5chokes_60N60E57V_20dBatt_rbw10k_DANLn100pm3dB_avg4 = pd.read_pickle('30cmDipBananna_5Chokes_60N60E57V_20dBatt_rbw10k_DANLn100pm3dB_avg4.pkl')
 
+comsolFreq, comsolPower = np.loadtxt('../comsolOutput/30cmDip_60_60_57_power_fullFeature_0.5MHzRes_12.25.21.txt', skiprows = 5, unpack = True)
 
-Raw_2chokesDiff_v2 = df_30cmDipClip_2chokes_60N60E57V_20dBatt_rbw10k_DANLn100pm3dB_avg4_v2['Raw Antenna Power (dBm)'] - df_30cmDipClip_2chokes_60N60E57V_20dBatt_rbw10k_DANLn100pm3dB_avg4['Raw Antenna Power (dBm)']
+comsolFreqCables, comsolPowerCables = np.loadtxt('../comsolOutput/30cmDip_60_60_57_power_addCables_fullFeature_0.25MHzRes_12.29.21.txt', skiprows = 5, unpack = True)
 
+#Raw_2chokesDiff_v2 = df_30cmDipClip_2chokes_60N60E57V_20dBatt_rbw130cmDipBananna_5Chokes_60N60E57V_20dBatt_rbw10k_DANLn100pm3dB_avg4.pkl'0k_DANLn100pm3dB_avg4_v2['Raw Antenna Power (dBm)'] - df_30cmDipClip_2chokes_60N60E57V_20dBatt_rbw10k_DANLn100pm3dB_avg4['Raw Antenna Power (dBm)']
+'''
 plt.figure()
 plt.title('No chokes Raw power v1 - v2')
 plt.plot(freqArr, Raw_2chokesDiff_v2)
@@ -43,7 +47,7 @@ plt.figure()
 plt.title('2 chokes Raw power v1 vs v2')
 plt.plot(freqArr, df_30cmDipClip_2chokes_60N60E57V_20dBatt_rbw10k_DANLn100pm3dB_avg4['Raw Antenna Power (dBm)'], 'r')
 plt.plot(freqArr, df_30cmDipClip_2chokes_60N60E57V_20dBatt_rbw10k_DANLn100pm3dB_avg4_v2['Raw Antenna Power (dBm)'])
-
+'''
 
 
 
@@ -119,16 +123,31 @@ plt.legend()
 
 
 
+plt.figure()
+plt.title('No chokes vs 2 vs All chokes vs COMSOL, Normilized Power')
+#plt.plot(freqArr, df_30cmDipClip_noChokes_60N60E57V_20dBatt_rbw10k_DANLn100pm3dB_avg4['Normilized Antenna Power (dBm)'], label = 'none')
+#plt.plot(freqArr, df_30cmDipClip_2chokes_60N60E57V_20dBatt_rbw10k_DANLn100pm3dB_avg4['Normilized Antenna Power (dBm)'], label = '2')
+#plt.plot(freqArr, df_30cmDipClip_allChokes_60N60E57V_20dBatt_rbw10k_D30cmDipBananna_5Chokes_60N60E57V_20dBatt_rbw10k_DANLn100pm3dB_avg4.pkl'ANLn100pm3dB_avg4['Normilized Antenna Power (dBm)'], label = 'All chokes, Normilized')
+plt.plot(freqArr, df_30cmDipClip_allChokes_60N60E57V_20dBatt_rbw10k_DANLn100pm3dB_avg4['Normilized Antenna Power (dBm)'].rolling(500).mean(), label = 'All chokes, Normilized, rolling avg')
+plt.plot(freqArr, df_30cmDipClip_allChokes_60N60E57V_20dBatt_rbw10k_DANLn100pm3dB_avg4['Normilized Antenna Power (dBm)'], label = 'All chokes, Normilized, rolling avg')
+plt.plot(comsolFreq, comsolPower, label = 'Comsol')
+plt.legend()
+
+plt.figure()
+plt.title('No chokes vs 2 vs All chokes vs COMSOL, Normilized Power')
+#plt.plot(freqArr, df_30cmDipClip_noChokes_60N60E57V_20dBatt_rbw10k_DANLn100pm3dB_avg4['Normilized Antenna Power (dBm)'], label = 'none')
+#plt.plot(freqArr, df_30cmDipClip_2chokes_60N60E57V_20dBatt_rbw10k_DANLn100pm3dB_avg4['Normilized Antenna Power (dBm)'], label = '2')
+#plt.plot(freqArr, df_30cmDipClip_allChokes_60N60E57V_20dBatt_rbw10k_DANLn100pm3dB_avg4['Normilized Antenna Power (dBm)'], label = 'All chokes, Normilized')
+plt.plot(freqArr, df_30cmDipBananna_5chokes_60N60E57V_20dBatt_rbw10k_DANLn100pm3dB_avg4['Normilized Antenna Power (dBm)'], label = 'Bananna')
+plt.plot(freqArr, df_30cmDipClip_allChokes_60N60E57V_20dBatt_rbw10k_DANLn100pm3dB_avg4['Normilized Antenna Power (dBm)'], label = 'clip')
+plt.plot(comsolFreq, comsolPower, label = 'Comsol')
+plt.legend()
 
 
-
-
-
-
-
-
-
-
+plt.figure()
+plt.plot(comsolFreqCables, comsolPowerCables, label = 'cables')
+plt.plot(comsolFreq, comsolPower, label = 'no cables')
+plt.legend()
 
 
 
