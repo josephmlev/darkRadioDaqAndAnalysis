@@ -40,10 +40,10 @@ if 1:
     INST.write('FREQ:STAR ' + str(startFreq))
     INST.write('FREQ:STOP ' + str(stopFreq))
 
-x = -0.698 # -0.698, 0.002, 0.701
-y = 0.174 # -0.312, 0.014, 0.174
-z = -1.204 # -1.204, 0.015 
-filename = 'n0.698x_0.174y_n1.204z'
+x = 0 # -0.698, 0.002, 0.701
+y = 0 # -0.312, 0.014, 0.174
+z = 0 # -1.204, 0.015 
+filename = 'random_hanging'
 
 
 specStr = (INST.query('TRAC:DATA? TRACE1'))
@@ -58,7 +58,7 @@ df['z'] = z
 df['Raw Power (dBm)'] = powerArr
 
 if 1:
-    timestamp = str(datetime.now()).replace(' ', '_').replace(':', '-')[:16]
+    timestamp = str(datetime.now()).replace(' ', '_').replace(':', '-')[:19]
     
     df.to_pickle(timestamp + '_' + filename + '.pkl')
     print(timestamp + '_' + filename + '.pkl')
