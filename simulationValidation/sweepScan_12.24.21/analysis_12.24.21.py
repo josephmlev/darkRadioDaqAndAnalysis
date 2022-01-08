@@ -24,6 +24,12 @@ def interpTxt(txtPath, freqArr):
     interpVswrArr = interp1d(vswrfreq,vswr)
     return interpVswrArr(freqArr)
 
+def interpComsolTxt(txtPath, freqArr):
+    freq = np.loadtxt(txtPath, skiprows = 5, usecols = 0)
+    value = np.loadtxt(txtPath, skiprows = 5, usecols = 1)
+    interpArr = interp1d(freq,value)
+    return interpArr(freqArr)
+
 
 def processPowerDf(freqArr, interpPowerArr, interpFGenCalArr, interpRLArr):
     dfName = pd.DataFrame()
@@ -99,6 +105,17 @@ plt.plot(freqArr, dip52cm_60_60_57_powerDf['Matching Loss'], label = '52cm dip')
 plt.legend()
 plt.xlabel('Freq (MHz)')
 plt.ylabel('dB')
+
+
+plt.figure()
+plt.title('Normilized Antenna Output Power vs COMSOL')
+plt.plot(freqArr, dip30cm_60_60_57_powerDf['Normilized Antenna Power (dBm)'], label = '30cm dip')
+#plt.plot(freqArr, dip52cm_60_60_57_PowerArr + 20, label = '30cm dip + const 20dB')
+#plt.plot(freqArr, interpComsolTxt('30cmDip_60_60_57_simulation_powerDbm_12.25.21.txt', freqArr), label = 'COMSOL')
+plt.plot(freqArr, interpComsolTxt('30cmDip_60_60_57_simulation_powerDbm_hiRes_12.26.21.txt', freqArr), label = 'COMSOL')
+plt.legend()
+plt.xlabel('Freq (MHz)')
+plt.ylabel('Power (dBm)')
 
 '''
 dip52CmFreq = pd.read_pickle('./52cmDip_pwr_n34dBm_60N_60W_57V.pkl').index.values
